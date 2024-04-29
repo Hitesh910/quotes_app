@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isColor = false ;
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -20,10 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
         exitDialog();
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: (isColor==true)?Colors.black:Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text("QoutesApp",style: TextStyle(color: Colors.white),),
+          backgroundColor: (isColor==true)?Colors.black:Colors.white,
+          title:  Text(
+            "QoutesApp",
+            style: TextStyle(color: (isColor==true)?Colors.white:Colors.black),
+          ),
           actions: [
             ElevatedButton(
                 onPressed: () {
@@ -52,7 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   },
                   // );
                 },
-                child: Text("Click"))
+                child: const Text("Click")),
+            IconButton.filledTonal(onPressed: () {
+              setState(() {
+                isColor = !isColor;
+              });
+            }, icon: Icon(Icons.color_lens))
           ],
         ),
         body: Column(
@@ -69,10 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         height: 100,
                         width: 200,
-                        margin: EdgeInsets.all(15),
-                        // color: Colors.red,
+                        margin: const EdgeInsets.all(15),
+                        // color: Colors.rxd,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(15),
                             // color: Colors.red,
                             image: DecorationImage(
                                 image:
@@ -86,26 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: GridView.builder(
                 itemCount: category.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 itemBuilder: (context, index) {
-                  return Container(
-                    height: 100,
-                    width: 100,
-                    alignment: Alignment.bottomLeft,
-                    margin: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(15),
-                        image: DecorationImage(
-                            image: NetworkImage('${category[index].image}'),
-                            fit: BoxFit.cover)),
-                    child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white.withOpacity(0.6)),
-                      child: Text('${category[index].name}',style: TextStyle(fontSize: 18),),
-                    ),
-                  );
+                  return Tile(index);
                 },
               ),
             ),
@@ -153,24 +146,58 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget Tile(int index) {
+    return InkWell(
+      onTap: () {
+        List mainList = [
+          happy,
+          sucess,
+          struggle
+        ];
+        Navigator.pushNamed(context, 'quotes', arguments: mainList[index]);
+      },
+      child: Container(
+        height: 100,
+        width: 100,
+        alignment: Alignment.bottomLeft,
+        margin: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(15),
+            image: DecorationImage(
+                image: NetworkImage('${category[index].image}'),
+                fit: BoxFit.cover)),
+        child: Container(
+          decoration: BoxDecoration(color: Colors.white.withOpacity(0.6)),
+          child: Text(
+            '${category[index].name}',
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
   void exitDialog() {
     showDialog(
       context: context,
-      builder:(context) {
-       return AlertDialog(
+      builder: (context) {
+        return AlertDialog(
           title: Column(
             children: [
-              Text("Are sure exit"),
+              const Text("Are sure exit"),
               Row(
                 children: [
                   ElevatedButton(
                       onPressed: () {
                         exit(0);
                       },
-                      child: Text("Yes")),
-                  ElevatedButton(onPressed: () {
-                    Navigator.pop(context);
-                  }, child: Text("No"))
+                      child: const Text("Yes")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("No"))
                 ],
               )
             ],
