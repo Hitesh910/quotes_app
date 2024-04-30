@@ -5,7 +5,7 @@ bool isColor = false;
 void main() {
   runApp(
     MaterialApp(
-      // theme: ThemeData(fontFamily: ),
+      theme: ThemeData(fontFamily: 'Dancing'),
     debugShowCheckedModeBanner: false,
     routes: app_routes
     ,),);

@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quotes_app/utils/global.dart';
 
@@ -61,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 isColor = !isColor;
               });
-            }, icon: Icon(Icons.color_lens))
+            }, icon: const Icon(Icons.color_lens))
           ],
         ),
         body: Column(
@@ -152,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
         List mainList = [
           happy,
           sucess,
+          sad,
           struggle
         ];
         Navigator.pushNamed(context, 'quotes', arguments: mainList[index]);

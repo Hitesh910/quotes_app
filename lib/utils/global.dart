@@ -27,6 +27,12 @@ List<QoutesModel> sucess = [
   QoutesModel('Pele', 'Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing or learning to do.'),
   QoutesModel('Margaret Thatcher', 'I do not know anyone who has got to the top without hard work. That is the recipe. It will not always get you to the top, but should get you pretty near.')
 ];
+List<QoutesModel> sad = [
+  QoutesModel('J.K. Rowling', 'To have been loved so deeply, even though the person who loved us is gone, will give us some protection forever.'),
+  QoutesModel('Kristin Hannah', 'Some stories don’t have happy endings. Even love stories. Maybe especially love stories.'),
+  QoutesModel('Ayushee Ghoshal', 'You make me feel like a firefly. Trapped in a belljar; starved for love.'),
+  QoutesModel(' Zelda Fitzgerald', 'Nobody has ever measured, not even poets, how much the heart can hold.')
+];
 List<QoutesModel> struggle = [
   QoutesModel("Thomas Mann, Essays of Three Decades", "A writer is someone for whom writing is more difficult than it is for other people."),
     QoutesModel('Joseph Conrad, Heart of Darkness','It was written I should be loyal to the nightmare of my choice.'),
