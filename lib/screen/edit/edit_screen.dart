@@ -29,6 +29,15 @@ class _EditScreenState extends State<EditScreen> {
   ];
   String? font = 'Dancing';
   bool fontOn = false;
+  double slide = 5;
+  Alignment isalign = Alignment.center;
+
+  // TextDirection isDirect = TextDirection.ltr;
+  FontWeight isWeight = FontWeight.normal;
+  FontStyle isStyle = FontStyle.normal;
+  TextDecoration isUnder = TextDecoration.none;
+  TextAlign isDirect = TextAlign.left;
+  bool isText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +67,21 @@ class _EditScreenState extends State<EditScreen> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '${m1.quotes}',
-                      style: TextStyle(
-                          fontSize: 22, fontFamily: font, color: isColor),
+                    child: Align(
+                      alignment: isalign,
+                      child: SelectableText(
+                        '${m1.quotes}'.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 10 * slide,
+                          fontFamily: font,
+                          color: isColor,
+                          fontWeight: isWeight,
+                          decoration: isUnder,
+                          fontStyle: isStyle,
+                        ),
+                        // textDirection: isDirect,
+                        textAlign: isDirect,
+                      ),
                     ),
                   ),
                 ),
@@ -69,14 +89,12 @@ class _EditScreenState extends State<EditScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: Text(
-                      '- ${m1.name}',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isColor,
-                      fontFamily: font),
-                    ),
+                    child: Text('- ${m1.name}',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isColor,
+                            fontFamily: font)),
                   ),
                 )
               ],
@@ -88,7 +106,14 @@ class _EditScreenState extends State<EditScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton.filledTonal(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    isText = !isText;
+                    fontOn = false;
+                    colorOn = false;
+                    imageOn = false;
+                  });
+                },
                 icon: const Icon(
                   Icons.text_fields,
                   size: 32,
@@ -100,6 +125,7 @@ class _EditScreenState extends State<EditScreen> {
                     fontOn = !fontOn;
                     colorOn = false;
                     imageOn = false;
+                    isText = false;
                   });
                 },
                 icon: const Icon(
@@ -113,6 +139,7 @@ class _EditScreenState extends State<EditScreen> {
                     colorOn = !colorOn;
                     imageOn = false;
                     fontOn = false;
+                    isText = false;
                   });
                 },
                 icon: const Icon(
@@ -126,6 +153,7 @@ class _EditScreenState extends State<EditScreen> {
                     imageOn = !imageOn;
                     colorOn = false;
                     fontOn = false;
+                    isText = false;
                   });
                 },
                 icon: const Icon(
@@ -134,9 +162,7 @@ class _EditScreenState extends State<EditScreen> {
                 ),
               ),
               IconButton.filledTonal(
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 icon: const Icon(
                   Icons.save,
                   size: 28,
@@ -175,8 +201,8 @@ class _EditScreenState extends State<EditScreen> {
             visible: imageOn,
             child: Expanded(
                 child: GridView.builder(
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
               itemCount: imageList.length,
               itemBuilder: (context, index) {
                 return InkWell(
@@ -195,27 +221,159 @@ class _EditScreenState extends State<EditScreen> {
           Visibility(
             visible: fontOn,
             child: Expanded(
-                child: ListView.builder(itemCount: fontList.length,itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(onTap: () {
+                child: ListView.builder(
+              itemCount: fontList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            font = fontList[index];
+                          });
+                        },
+                        child: Text(
+                          fontList[index],
+                          style: const TextStyle(fontSize: 25),
+                        )),
+                    const Divider()
+                  ],
+                );
+              },
+            )
+                //     GridView.builder(
+                //   gridDelegate:
+                //       SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                //   itemCount: fontList.length,
+                //   itemBuilder: (context, index) {
+                //     return Text(fontList[index]);
+                //   },
+                // ))
+                ),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Visibility(
+            visible: isText,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton.filledTonal(
+                      onPressed: () {
+
                         setState(() {
-                          font = fontList[index];
+                          if (isWeight == FontWeight.normal) {
+                            isWeight = FontWeight.bold;
+                          } else {
+                            isWeight = FontWeight.normal;
+                          }
                         });
-                      },child: Text(fontList[index],style: const TextStyle(fontSize: 25),)),
-                      const Divider()
+                      },
+                      icon: Icon(Icons.format_bold),
+                    ),
+                    IconButton.filledTonal(
+                      onPressed: () {
+                      },
+                      icon: Icon(Icons.text_fields),
+                    ),
+                    IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() {
+                          if(isUnder == TextDecoration.none)
+                          {
+                            isUnder = TextDecoration.underline;
+                          }
+                          else
+                            {
+                              isUnder = TextDecoration.none;
+                            }
+                        });
+                      },
+                      icon: Icon(Icons.format_underline),
+                    ),
+                    IconButton.filledTonal(
+                        onPressed: () {
+                          setState(
+                            () {
+                              if(isStyle == FontStyle.normal)
+                              {
+                                isStyle = FontStyle.italic;
+                              }
+                              else
+                                {
+                                  isStyle = FontStyle.normal;
+                                }
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.format_italic))
+                  ],
+                ),
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() {
+                          isDirect = TextAlign.left;
+                        });
+                      },
+                      icon: Icon(Icons.format_align_left),
+                    ),
+                    IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() {
+                          isDirect = TextAlign.center;
+                        });
+                      },
+                      icon: Icon(Icons.format_align_center_outlined),
+                    ),
+                    IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() {
+                          isDirect = TextAlign.right;
+                        });
+                      },
+                      icon: Icon(Icons.format_align_right),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Size :",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      Expanded(
+                        child: Slider(
+                          value: slide,
+                          onChanged: (double s) {
+                            setState(() {
+                              slide = s;
+                            });
+                          },
+                          inactiveColor: Colors.blue,
+                          divisions: 10,
+                          min: 1,
+                          max: 10,
+                        ),
+                      )
                     ],
-                  );
-                },)
-            //     GridView.builder(
-            //   gridDelegate:
-            //       SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-            //   itemCount: fontList.length,
-            //   itemBuilder: (context, index) {
-            //     return Text(fontList[index]);
-            //   },
-            // ))
+                  ),
+                ),
+                // ElevatedButton(onPressed: () {
+                //
+                // }, child: )
+              ],
             ),
           )
         ],
