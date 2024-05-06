@@ -1,5 +1,15 @@
+import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quotes_app/model/qoutes_model.dart';
+import 'package:quotes_app/utils/global.dart';
 
 class EditScreen extends StatefulWidget {
   const EditScreen({super.key});
@@ -29,7 +39,7 @@ class _EditScreenState extends State<EditScreen> {
   ];
   String? font = 'Dancing';
   bool fontOn = false;
-  double slide = 5;
+  double slide = 2;
   Alignment isalign = Alignment.center;
 
   // TextDirection isDirect = TextDirection.ltr;
@@ -38,6 +48,7 @@ class _EditScreenState extends State<EditScreen> {
   TextDecoration isUnder = TextDecoration.none;
   TextAlign isDirect = TextAlign.left;
   bool isText = false;
+  GlobalKey globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -45,59 +56,69 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit quotes"),
+        actions: [
+          // Icon(icon)
+          // IconButton(onPressed: () {
+          //   Random r1 = Random();
+          //   int i = r1.nextInt(happy.length);
+          // }, icon: Icon(Icons.sunny))
+        ],
       ),
       body: Column(
         children: [
-          Container(
-            height: 350,
-            width: MediaQuery.sizeOf(context).width,
-            margin: const EdgeInsets.all(10),
-            // padding: EdgeInsets.all(12),
-            alignment: Alignment.center,
-            color: Colors.amber,
-            child: Stack(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  '${path}',
-                  fit: BoxFit.cover,
-                  height: 400,
-                  width: 400,
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: isalign,
-                      child: SelectableText(
-                        '${m1.quotes}'.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 10 * slide,
-                          fontFamily: font,
-                          color: isColor,
-                          fontWeight: isWeight,
-                          decoration: isUnder,
-                          fontStyle: isStyle,
+          RepaintBoundary(
+            key: globalKey,
+            child: Container(
+              height: 350,
+              width: MediaQuery.sizeOf(context).width,
+              margin: const EdgeInsets.all(10),
+              // padding: EdgeInsets.all(12),
+              alignment: Alignment.center,
+              color: Colors.amber,
+              child: Stack(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    '${path}',
+                    fit: BoxFit.cover,
+                    height: 400,
+                    width: 400,
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: isalign,
+                        child: SelectableText(
+                          '${m1.quotes}'.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10 * slide,
+                            fontFamily: font,
+                            color: isColor,
+                            fontWeight: isWeight,
+                            decoration: isUnder,
+                            fontStyle: isStyle,
+                          ),
+                          // textDirection: isDirect,
+                          textAlign: isDirect,
                         ),
-                        // textDirection: isDirect,
-                        textAlign: isDirect,
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text('- ${m1.name}',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: isColor,
-                            fontFamily: font)),
-                  ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text('- ${m1.name}',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isColor,
+                              fontFamily: font)),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           // Text('${m1.name}'),
@@ -162,7 +183,11 @@ class _EditScreenState extends State<EditScreen> {
                 ),
               ),
               IconButton.filledTonal(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    save();
+                  });
+                },
                 icon: const Icon(
                   Icons.save,
                   size: 28,
@@ -252,7 +277,7 @@ class _EditScreenState extends State<EditScreen> {
                 // ))
                 ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Visibility(
@@ -266,7 +291,6 @@ class _EditScreenState extends State<EditScreen> {
                   children: [
                     IconButton.filledTonal(
                       onPressed: () {
-
                         setState(() {
                           if (isWeight == FontWeight.normal) {
                             isWeight = FontWeight.bold;
@@ -275,44 +299,37 @@ class _EditScreenState extends State<EditScreen> {
                           }
                         });
                       },
-                      icon: Icon(Icons.format_bold),
+                      icon: const Icon(Icons.format_bold),
                     ),
                     IconButton.filledTonal(
-                      onPressed: () {
-                      },
-                      icon: Icon(Icons.text_fields),
+                      onPressed: () {},
+                      icon: const Icon(Icons.text_fields),
                     ),
                     IconButton.filledTonal(
                       onPressed: () {
                         setState(() {
-                          if(isUnder == TextDecoration.none)
-                          {
+                          if (isUnder == TextDecoration.none) {
                             isUnder = TextDecoration.underline;
+                          } else {
+                            isUnder = TextDecoration.none;
                           }
-                          else
-                            {
-                              isUnder = TextDecoration.none;
-                            }
                         });
                       },
-                      icon: Icon(Icons.format_underline),
+                      icon: const Icon(Icons.format_underline),
                     ),
                     IconButton.filledTonal(
                         onPressed: () {
                           setState(
                             () {
-                              if(isStyle == FontStyle.normal)
-                              {
+                              if (isStyle == FontStyle.normal) {
                                 isStyle = FontStyle.italic;
+                              } else {
+                                isStyle = FontStyle.normal;
                               }
-                              else
-                                {
-                                  isStyle = FontStyle.normal;
-                                }
                             },
                           );
                         },
-                        icon: Icon(Icons.format_italic))
+                        icon: const Icon(Icons.format_italic))
                   ],
                 ),
                 Row(
@@ -325,7 +342,7 @@ class _EditScreenState extends State<EditScreen> {
                           isDirect = TextAlign.left;
                         });
                       },
-                      icon: Icon(Icons.format_align_left),
+                      icon: const Icon(Icons.format_align_left),
                     ),
                     IconButton.filledTonal(
                       onPressed: () {
@@ -333,7 +350,7 @@ class _EditScreenState extends State<EditScreen> {
                           isDirect = TextAlign.center;
                         });
                       },
-                      icon: Icon(Icons.format_align_center_outlined),
+                      icon: const Icon(Icons.format_align_center_outlined),
                     ),
                     IconButton.filledTonal(
                       onPressed: () {
@@ -341,7 +358,7 @@ class _EditScreenState extends State<EditScreen> {
                           isDirect = TextAlign.right;
                         });
                       },
-                      icon: Icon(Icons.format_align_right),
+                      icon: const Icon(Icons.format_align_right),
                     ),
                   ],
                 ),
@@ -349,7 +366,7 @@ class _EditScreenState extends State<EditScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         "Size :",
                         style: TextStyle(fontSize: 25),
                       ),
@@ -379,5 +396,30 @@ class _EditScreenState extends State<EditScreen> {
         ],
       ),
     );
+  }
+
+  Future<Object?> save() async {
+    {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      var bs64 = byteData?.buffer.asUint8List();
+      // var bs64 = base64Decode(pngBytes as String);
+
+      String? path =
+          "${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
+
+      if (Platform.isAndroid) {
+        await File("/storage/emulated/0/Download/$path.png").writeAsBytes(bs64!);
+        return "/storage/emulated/0/Download/$path.png";
+      } else {
+        Directory? dir = await getDownloadsDirectory();
+        await File("${dir!.path}.png").writeAsBytes(bs64!);
+        return "${dir!.path}.png";
+      }
+      return bs64;
+    }
   }
 }

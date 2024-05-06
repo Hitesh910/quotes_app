@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:quotes_app/utils/global.dart';
 
@@ -10,7 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isColor = false ;
+  bool isColor = false;
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -19,47 +21,66 @@ class _HomeScreenState extends State<HomeScreen> {
         exitDialog();
       },
       child: Scaffold(
-        backgroundColor: (isColor==true)?Colors.black:Colors.white,
+        backgroundColor: (isColor == true) ? Colors.black : Colors.white,
         appBar: AppBar(
-          backgroundColor: (isColor==true)?Colors.black:Colors.white,
-          title:  Text(
+          backgroundColor: (isColor == true) ? Colors.black : Colors.white,
+          title: Text(
             "QoutesApp",
-            style: TextStyle(color: (isColor==true)?Colors.white:Colors.black),
+            style: TextStyle(
+                color: (isColor == true) ? Colors.white : Colors.black),
           ),
           actions: [
+            IconButton(
+                onPressed: () {
+                  Random r1 = Random();
+                  int i = r1.nextInt(happy.length);
+
+                  Text("${happy[i].quotes}");
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        actions: [Text("${happy[i].quotes}")],
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.sunny)),
             ElevatedButton(
                 onPressed: () {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (context) {
-                  //     return AlertDialog(
-                  //       title: Column(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         children: [
-                  //           Text("Are sure Exit"),
-                  //           Row(
-                  //             children: [
-                  //               ElevatedButton(
-                  //                   onPressed: () {
-                  //                     exit();
-                  //                   },
-                  //                   child: Text("Yes")),
-                  //               ElevatedButton(
-                  //                   onPressed: () {}, child: Text("no")),
-                  //             ],
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     );
-                  //   },
-                  // );
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Are sure Exit"),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      exit(0);
+                                    },
+                                    child: const Text("Yes")),
+                                ElevatedButton(
+                                    onPressed: () {}, child: const Text("no")),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
                 },
                 child: const Text("Click")),
-            IconButton.filledTonal(onPressed: () {
-              setState(() {
-                isColor = !isColor;
-              });
-            }, icon: const Icon(Icons.color_lens))
+            IconButton.filledTonal(
+                onPressed: () {
+                  setState(() {
+                    isColor = !isColor;
+                  });
+                },
+                icon: const Icon(Icons.color_lens))
           ],
         ),
         body: Column(
@@ -147,12 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget Tile(int index) {
     return InkWell(
       onTap: () {
-        List mainList = [
-          happy,
-          sucess,
-          sad,
-          struggle
-        ];
+        List mainList = [happy, sucess, sad, struggle];
         Navigator.pushNamed(context, 'quotes', arguments: mainList[index]);
       },
       child: Container(
